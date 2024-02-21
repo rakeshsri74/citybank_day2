@@ -1,0 +1,118 @@
+1.JSON Response
+
+JavaScript Object Notation
+
+Content-Type Header:
+
+application/json
+
+Content-Type:application/json
+
+2.XML response in SpringBoot Rest
+
+Add XML Support
+
+application/xml as header
+
+Add jackson and jaxb
+
+3.Content Negotiation in Spring Boot Application
+
+@RestController
+@RequestMapping("/api")
+public class MyController{
+
+    @GetMapping(value="/data",produces={MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    public User getUser(){
+        //Retrieving the data
+    }
+}
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void configureContentNegotiation(final ContentNegotiationConfigurer configurer) {
+        configurer.favorPathExtension(true)
+        .favorParameter(true)
+        .parameterName("mediaType").ignoreAcceptHeader(false)
+        .useRegisteredExtensionsOnly(false)
+        .defaultContentType(MediaType.APPLICATION_JSON)
+        .mediaType("xml",MediaType.APPLICATION_XML)
+        .mediaType("json",MediaType.APPLICATION_JSON);
+        
+    }
+}
+
+http://localhost:8080/books/all?mediaType=json
+http://localhost:8080/books/all?mediaType=xml
+
+<dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+        
+        
+ -----------------------------
+ 
+ spring.http.converters.preferred-json-mapper=jackson
+spring.http.converters.preferred.json-mapper=jaxb
+
+
+
+---------------------------------------------------
+
+Developing Client for Restful WebServices
+
+
+@Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
+    }
+    
+   /* @Bean
+    public CommandLineRunner run(RestTemplate restTemplate) throws Exception{
+        return args -> {
+            Book book = restTemplate.getForObject(
+                    "http://localhost:8080/books/book/1?mediaType=json",Book.class);
+            System.out.println(book.toString());
+        };
+    }*/
+    
+    
+    ==============================================================================
+    
+@GetMapping("/boodByUrl")
+    public ResponseEntity<?> getRest(){
+        Book book = restTemplate.getForObject("http://localhost:8080/books/book/1?mediaType=json",Book.class);
+        return ResponseEntity.ok().body(book);
+    }
+
+
+git remote add origin https://github.com/rakeshsri74/citybank_day2.git
+
+https://github.com/rakeshsri74/citybank_day2
+
+https://collabedit.com/7jhv4
+
+===================================================================
+
+Exercise
+
+Create a SpringBoot Rest application to perform crud operation
+
+Model:
+Stock
+
+Fields
+stockId
+stockName
+stockPrice
+
+Check the url through postman and check get,post,put and delete method.
+
+
+
+
+
+
